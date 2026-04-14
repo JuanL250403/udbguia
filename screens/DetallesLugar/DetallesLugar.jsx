@@ -76,7 +76,7 @@ export function DetallesLugar({ route, navigation }) {
                         tabBarLabelStyle: { fontSize: 16, fontWeight: 'bold', marginBottom: 5 },
                         tabBarIconStyle: { display: 'none' },
                         headerShown: false,
-                        tabBarStyle: { height: 60 }
+                        tabBarStyle: { height: 150 }
                     }}>
                     <Tab.Screen name="Detalles" component={Detalles} initialParams={{ lugar: datos }} />
                     <Tab.Screen name="Reseñas" component={Resenias} initialParams={{ lugar: datos, navigation: navigation }} />
