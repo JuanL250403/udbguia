@@ -11,6 +11,7 @@ import * as MediaLibrary from 'expo-media-library'
 import { CarruselFotos } from "./components/CarruselFotos";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from 'expo-image-picker';
+import { LugaresCercanos } from "../LugaresCercanos/LugaresCercanos";
 
 const Tab = createBottomTabNavigator()
 
@@ -76,13 +77,13 @@ export function DetallesLugar({ route, navigation }) {
                         tabBarLabelStyle: { fontSize: 16, fontWeight: 'bold', marginBottom: 5 },
                         tabBarIconStyle: { display: 'none' },
                         headerShown: false,
-                        tabBarStyle: { height: 60 }
+                        tabBarStyle: { height: 130 }
                     }}>
                     <Tab.Screen name="Detalles" component={Detalles} initialParams={{ lugar: datos }} />
                     <Tab.Screen name="Reseñas" component={Resenias} initialParams={{ lugar: datos, navigation: navigation }} />
-                    <Tab.Screen name="Mapa" component={MapaLugar} initialParams={{ lugar: datos }} />
+                    <Tab.Screen name="Lugares " component={LugaresCercanos} initialParams={{ lugar: datos }} />
                 </Tab.Navigator>
             </View>
         </View>
     )
-}
+} 

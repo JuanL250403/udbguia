@@ -32,7 +32,7 @@ export function Resenias({ route, navigation }) {
         }
     }
     return (
-        <View style={{ height: "100%" }}>
+        <View style={styles.container}>
             <View style={styles.nuevaResenia}>
                 <TouchableOpacity style={styles.enviar} onPress={() => agregarResenia()}>
                     <Text style={styles.texto}>Agregar reseña</Text>
@@ -50,6 +50,10 @@ export function Resenias({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+    container:{
+        height: "100%",
+        backgroundColor: '#f9f9775c',
+    },
     nuevaResenia: {
         margin: 10,
         flexDirection: 'row',
@@ -60,7 +64,7 @@ const styles = StyleSheet.create({
     input: {
         padding: 10,
         backgroundColor: 'lightgrey', borderRadius: 20,
-        width: "85%"
+        width: "85%",
     },
     enviar: {
         justifyContent: 'center',
@@ -68,14 +72,23 @@ const styles = StyleSheet.create({
         height: "full",
         width: "100%",
         borderRadius: 20,
-        backgroundColor: 'blue'
+        backgroundColor: '#2196F3'
     },
     resenia: {
         borderWidth: 1,
         borderRadius: 20,
         height: 75,
         padding: 10,
-        margin: 5
+        margin: 5,
+        lexDirection: 'row',
+        borderWidth: 1,
+        borderRadius: 20,
+        marginVertical: 8,
+        marginHorizontal: 10,
+        padding: 10,
+        backgroundColor: '#fff', // Fondo blanco para que resalte
+        alignItems: 'justify-content',
+        overflow: 'hidden'
     },
     texto: {
         color: 'white'

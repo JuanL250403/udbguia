@@ -107,7 +107,7 @@ export function LugaresCercanos({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#f9f9775c'
     },
     header: {
         fontSize: 20,

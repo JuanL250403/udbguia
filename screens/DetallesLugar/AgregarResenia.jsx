@@ -39,7 +39,7 @@ export function AgregarResenia({ route, navigation }) {
         setMensaje("")
     }
     return (
-        <View>
+        <View style={styles.container}>
             <Text>{lugar.nombre}</Text>
             <TextInput value={mensaje} onChangeText={(texto) => setMensaje(texto)} />
             <TouchableOpacity style={styles.enviar} onPress={() => agregarResenia()}>
@@ -54,6 +54,10 @@ export function AgregarResenia({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        height: "100%",
+        backgroundColor: '#f9f9775c',
+    },
     input: {
         padding: 10,
         backgroundColor: 'lightgrey', borderRadius: 20,
@@ -65,7 +69,7 @@ const styles = StyleSheet.create({
         height: 30,
         width: "100%",
         borderRadius: 20,
-        backgroundColor: 'blue',
+        backgroundColor: '#2196F3',
         marginBottom: 30,
     },
 
