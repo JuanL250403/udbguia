@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput } from "react-native-gesture-handler";
+import { Resenias } from "./components/Resenias";
+import { Inicio } from "../Inicio/Inicio";
 
-export function AgregarResenia({ route }) {
+export function AgregarResenia({ route, navigation }) {
     const { lugar } = route.params
     const { actualizaResenia } = route.params
     const [mensaje, setMensaje] = useState
@@ -43,6 +45,10 @@ export function AgregarResenia({ route }) {
             <TouchableOpacity style={styles.enviar} onPress={() => agregarResenia()}>
                 <Text>Registrar</Text>
             </TouchableOpacity>
+            {/*BTN volever*/}
+            <TouchableOpacity style={styles.enviar} onPress={() => navigation.goBack()}>
+                <Text>Volver Atras</Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -59,6 +65,8 @@ const styles = StyleSheet.create({
         height: 30,
         width: "100%",
         borderRadius: 20,
-        backgroundColor: 'blue'
+        backgroundColor: 'blue',
+        marginBottom: 30,
     },
+
 })

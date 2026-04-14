@@ -167,4 +167,28 @@ export const data = [
     imgs: [],
     resenias: ["Buen lugar para estudiar", "Mala conexion a internet"],
   },
+  {
+    id: 15,
+    nombre: "Edificio R",
+    tipo: "Edificio",
+    descripcion: "Edificio de gestión financiera",
+    coordenadas: {
+      latitud: 13.716549700265718,
+      longitud: -89.15366116547833,
+    },
+    imgs: [],
+    resenias: ["Buena atencion para mis pagos", "Mala conexion a internet"],
+  },
+  {
+    id: 16,
+    nombre: "Biblioteca",
+    tipo: "Edificio",
+    descripcion: "Edificio de Biblioteca",
+    coordenadas: {
+      latitud: 13.716895839597493,
+      longitud: -89.15360411541022,
+    },
+    imgs: [],
+    resenias: ["Buen lugar para estudiar y de descanso", "Mala conexion a internet"],
+  },
 ];
