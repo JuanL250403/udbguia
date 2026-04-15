@@ -8,7 +8,6 @@ export function CarruselFotos({ orientacion, setVerCamara, lugar }) {
 
     useEffect(() => {
         setFotos(lugar.imgs)
-        console.log(lugar.imgs)
     }, [lugar])
 
     return (
@@ -17,13 +16,19 @@ export function CarruselFotos({ orientacion, setVerCamara, lugar }) {
                 <Image source={require('../../../assets/icons/subirImagen.png')} style={{ height: 25, width: 25 }} />
 
             </TouchableOpacity>
-            <ScrollView horizontal={true}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 {fotos.length !== 0 ?
                     fotos.map((foto, index) => (
-                        <Image key={index} src={foto} style={styles.img} height={orientacion !== "portrait" ? height * 0.74 : "97%"} width={orientacion !== "portrait" ? width * 0.5 : width * 0.97} />
+                        <Image key={index} src={foto} style={styles.img} height={orientacion !== "portrait" ? height * 0.75 : "97%"} width={orientacion !== "portrait" ? width * 0.5 : width * 0.97} />
                     ))
                     :
-                    <></>
+                    <View style={[{ height: orientacion !== "portrait" ? height * 0.80 : "97%", width: orientacion !== "portrait" ? width * 0.5 : width * 0.97 }, styles.noImagenContainer]}>
+                        <Image
+                            source={require("../../../assets/icons/noImagen.png")}
+                            style={[styles.noImg]}
+                            height={50} width={50}
+                        />
+                    </View>
                 }
             </ScrollView>
         </View>
@@ -48,7 +53,16 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginBottom: 5
     },
+    noImg: {
+        padding: 40,
+    },
+    noImagenContainer: {
+        backgroundColor: '#eee',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     carrusel: {
+        alignContent: 'center',
         justifyContent: 'center'
     }
 })

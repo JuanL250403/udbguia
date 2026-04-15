@@ -11,6 +11,8 @@ import * as MediaLibrary from 'expo-media-library'
 import { CarruselFotos } from "./components/CarruselFotos";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from 'expo-image-picker';
+import { LugaresCercanos } from "../LugaresCercanos/LugaresCercanos";
+import { colores } from "../../styles";
 
 const Tab = createBottomTabNavigator()
 
@@ -19,28 +21,46 @@ export function DetallesLugar({ route, navigation }) {
     const { height, width } = useWindowDimensions();
 
     const [datos, setDatos] = useState(null)
-    const [orientacion, setOrientacion] = useState("portrait")
+    const [orientacion, setOrientacion] = useState("")
     const [verCamara, setVerCamara] = useState(false)
 
     useEffect(() => {
         obtenerPermisos()
         obtenerDatos()
+        const obtenerOrientacionIni = async () => {
+            const e = await ScreenOrientation.getOrientationAsync()
+            procesarOrientacion(e)
+        }
 
+        obtenerOrientacionIni()
         const subscripcionOri = ScreenOrientation.addOrientationChangeListener((e) => {
-            if (e.orientationInfo.orientation <= 2) {
-                setOrientacion("portrait")
-            } else {
-                setOrientacion("landscape")
-            }
+            procesarOrientacion(e.orientationInfo.orientation)
         })
         return () => subscripcionOri.remove()
     }, [])
 
+    useEffect(() => {
+        obtenerDatos()
+    }, [verCamara])
+
+    const procesarOrientacion = (orientacion) => {
+        if (orientacion <= 2) {
+            setOrientacion("portrait")
+        } else {
+            setOrientacion("landscape")
+        }
+    }
+
     const obtenerPermisos = async () => {
         try {
-            await Camera.requestCameraPermissionsAsync();
-            await MediaLibrary.requestPermissionsAsync();
-            await ImagePicker.requestMediaLibraryPermissionsAsync();
+            const camaraPermiso = await Camera.requestCameraPermissionsAsync();
+            const mediaPermisos = await MediaLibrary.requestPermissionsAsync();
+            const imagePickerPermi = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (!camaraPermiso.granted || !mediaPermisos.granted || !imagePickerPermi.granted) {
+                Alert.alert("Permisos requeridos", "permisos de camara y media reqqueridos")
+                navigation.goBack()
+            }
+
         } catch (error) {
             console.log("Error de permisos", error);
         }
@@ -59,30 +79,35 @@ export function DetallesLugar({ route, navigation }) {
         }
     }
 
-    if (!datos) return <View style={{flex: 1, backgroundColor: 'white'}} />;
+    if (!datos) return <View style={{ flex: 1, backgroundColor: 'white' }} />;
 
     if (verCamara) {
         return <CapturaFoto lugarId={datos.id} setVerCamara={setVerCamara} />
     }
 
     return (
-        <View style={[{ flex: 1 }, orientacion !== "portrait" ? { flexDirection: 'row' } : { flexDirection: 'column' }]}>
-            
+        <View style={[styles.container, orientacion !== "portrait" ? { flexDirection: 'row' } : { flexDirection: 'column' }]}>
+
             <CarruselFotos orientacion={orientacion} setVerCamara={setVerCamara} lugar={datos} />
 
-            <View style={orientacion !== "portrait" ? { flex: 1 } : { flex: 1 }}>
+            <View style={{ flex: 1 }}>
                 <Tab.Navigator
                     screenOptions={{
-                        tabBarLabelStyle: { fontSize: 16, fontWeight: 'bold', marginBottom: 5 },
+                        tabBarLabelStyle: { fontSize: 23, fontWeight: 'bold', marginBottom: 5 },
                         tabBarIconStyle: { display: 'none' },
                         headerShown: false,
-                        tabBarStyle: { height: 150 }
+                        tabBarStyle: { height: orientacion !== 'portrait' ? 80 : 120, backgroundColor: colores.secundario }
                     }}>
                     <Tab.Screen name="Detalles" component={Detalles} initialParams={{ lugar: datos }} />
                     <Tab.Screen name="Reseñas" component={Resenias} initialParams={{ lugar: datos, navigation: navigation }} />
-                    <Tab.Screen name="Mapa" component={MapaLugar} initialParams={{ lugar: datos }} />
                 </Tab.Navigator>
             </View>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    }
+})

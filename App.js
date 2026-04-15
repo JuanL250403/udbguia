@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DetallesLugar } from "./screens/DetallesLugar/DetallesLugar";
 import * as Location from 'expo-location'
 import { AgregarResenia } from "./screens/DetallesLugar/AgregarResenia";
-
+import { colores } from "./styles";
 
 const Stack = createStackNavigator();
 
@@ -19,12 +19,14 @@ export default function App() {
 
   useEffect(() => {
     guardarDatos();
+
+    
   }, []);
 
   const guardarDatos = async () => {
-    const dataStorage = AsyncStorage.getItem("lugares");
+    const dataStorage = await AsyncStorage.getItem("lugares");
 
-    if(!data){
+    if(dataStorage){
       return;
     }
 
@@ -40,12 +42,26 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={
+        {
+          headerStyle: {
+            backgroundColor: colores.primario
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            color: 'white',
+            fontSize: 30
+          },
+          headerTintColor: colores.secundario,
+
+        }
+      }
+      >
         <Stack.Screen name="Inicio" component={Inicio} />
-        <Stack.Screen name="ListadoLugares" component={ListadoLugares} />
-        <Stack.Screen name="DetallesLugar" component={DetallesLugar} />
-        <Stack.Screen name="LugaresCercanos" component={LugaresCercanos} />
-        <Stack.Screen name="AgregarResenia" component={AgregarResenia} />
+        <Stack.Screen options={{title: "Listado de lugares"}} name="ListadoLugares" component={ListadoLugares} />
+        <Stack.Screen options={{title: "Detalles"}} name="DetallesLugar" component={DetallesLugar}/>
+        <Stack.Screen options={{title: "Lugares cercanos"}} name="LugaresCercanos" component={LugaresCercanos} />
+        <Stack.Screen options={{title: "Agregar reseña"}} name="AgregarResenia" component={AgregarResenia} />
       </Stack.Navigator>
     </NavigationContainer>
   );

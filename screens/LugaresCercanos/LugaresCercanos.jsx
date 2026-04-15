@@ -1,51 +1,55 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { View, Text, ScrollView, Alert, StyleSheet } from "react-native";
 import * as Location from 'expo-location';
 import getDistance from "geolib/es/getPreciseDistance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LugarCercanoCard } from "./components/LugarCercanoCard";
+import { useFocusEffect } from "@react-navigation/native";
 
 export function LugaresCercanos({ navigation }) {
+    const lugaresData = useRef([])
     const [lugaresCercanos, setLugaresCercanos] = useState([]);
     const [cargando, setCargando] = useState(true);
+
+    useFocusEffect(
+        useCallback(() =>{
+            obtenerLugares()
+        },[])
+    )
 
     useEffect(() => {
         let locacionSuscripcion;
 
+        
         const iniciarSeguimiento = async () => {
+            await obtenerLugares()
             // 1. Pedir permisos
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== "granted") {
                 Alert.alert("Permisos GPS", "Se requieren permisos de GPS para medir distancias.");
+                navigation.goBack()
                 setCargando(false);
                 return;
             }
-
-            // 2. Obtener datos de AsyncStorage
-            const lugaresItem = await AsyncStorage.getItem("lugares");
-            if (!lugaresItem) {
-                setCargando(false);
-                return;
-            }
-            const lugaresData = JSON.parse(lugaresItem);
 
             // 3. Suscribirse a la ubicación en tiempo real
             locacionSuscripcion = await Location.watchPositionAsync(
                 {
                     accuracy: Location.Accuracy.High,
-                    timeInterval: 2000,
+                    timeInterval: 1000,
                     distanceInterval: 1
                 },
                 (nuevaLocacion) => {
-                    const listaCalculada = lugaresData.map(lugar => {
+                    const lu = lugaresData.current
+                    const listaCalculada = lu.map(lugar => {
                         const metros = getDistance(
-                            { 
-                                latitude: nuevaLocacion.coords.latitude, 
-                                longitude: nuevaLocacion.coords.longitude 
+                            {
+                                latitude: nuevaLocacion.coords.latitude,
+                                longitude: nuevaLocacion.coords.longitude
                             },
-                            { 
-                                latitude: lugar.coordenadas.latitud, 
-                                longitude: lugar.coordenadas.longitud 
+                            {
+                                latitude: lugar.coordenadas.latitud,
+                                longitude: lugar.coordenadas.longitud
                             }
                         );
 
@@ -75,8 +79,20 @@ export function LugaresCercanos({ navigation }) {
                 locacionSuscripcion.remove();
             }
         };
-    }, []);
+    }, [lugaresData]);
 
+
+    const obtenerLugares = async () => {
+        const lugaresItem = await AsyncStorage.getItem("lugares");
+        if (!lugaresItem) {
+            setCargando(true);
+            return;
+        }
+        const lugares = JSON.parse(lugaresItem);
+
+        lugaresData.current = lugares
+    }
+    
     if (cargando) {
         return (
             <View style={styles.center}>
@@ -87,12 +103,12 @@ export function LugaresCercanos({ navigation }) {
 
     return (
         <ScrollView style={styles.container}>
-            <Text style={styles.header}>Edificios cerca de ti</Text>
+            <Text style={styles.header}>Lugares cerca de ti</Text>
             {lugaresCercanos.length > 0 ? (
-                lugaresCercanos.map(lugar => (
-                    <LugarCercanoCard 
-                        key={lugar.id} 
-                        lugar={lugar} 
+                lugaresCercanos.map((lugar, index) => (
+                    <LugarCercanoCard
+                        key={index}
+                        lugar={lugar}
                         navigation={navigation}
                     />
                 ))
@@ -107,9 +123,13 @@ export function LugaresCercanos({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#ffffff',
+        padding: 20,
+        // Esto evita que el contenido del scroll se dibuje fuera del cuadro
+        overflow: 'hidden',
     },
     header: {
+        textAlign: 'center',
         fontSize: 20,
         fontWeight: 'bold',
         margin: 15,

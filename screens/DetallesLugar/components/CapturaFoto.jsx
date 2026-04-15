@@ -37,7 +37,6 @@ export function CapturaFoto({ lugarId, setVerCamara }) {
     const guardarFoto = async () => {
 
         const fotoAsset = await MediaLibrary.createAssetAsync(foto.uri)
-
         asociarFotoLugar(fotoAsset.uri)
         Alert.alert("Foto Guardada", "su fotografia ha sido guardada exitosamente")
         cancelarGuardado()
